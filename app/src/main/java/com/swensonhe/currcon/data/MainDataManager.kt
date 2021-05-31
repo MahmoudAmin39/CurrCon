@@ -1,5 +1,11 @@
 package com.swensonhe.currcon.data
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import com.swensonhe.currcon.CurrConApp
 import com.swensonhe.currcon.data.model.ApiResponse
 import com.swensonhe.currcon.data.model.CurrencyRate
 import com.swensonhe.currcon.data.retrofit.RetrofitClient
@@ -12,6 +18,24 @@ object MainDataManager {
     private val latestRatesService = RetrofitClient.latestRatesService
 
     fun getLatestRatesFor(currency: String, callback: (List<CurrencyRate>?, String?) -> Unit) {
+        if (CurrConApp.instance?.isInternetAvailable()!!) {
+            fetchData(currency, callback)
+        } else {
+            CurrConApp.instance?.registerReceiver(object : BroadcastReceiver() {
+                override fun onReceive(context: Context?, intent: Intent?) {
+                    if (CurrConApp.instance?.isInternetAvailable()!!) {
+                        fetchData(currency, callback)
+                    }
+                }
+            }, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+            callback(
+                null,
+                "Please make sure you're connected to the internet.\nThis message will automatically disappear once connected."
+            )
+        }
+    }
+
+    private fun fetchData(currency: String, callback: (List<CurrencyRate>?, String?) -> Unit) {
         latestRatesService.getLatestRatesFor(currency, Constants.FIXER_IO_API_KEY)
             .enqueue(object : Callback<ApiResponse> {
 
