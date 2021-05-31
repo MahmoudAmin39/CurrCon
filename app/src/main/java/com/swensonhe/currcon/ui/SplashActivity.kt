@@ -1,11 +1,12 @@
-package com.swensonhe.currcon
+package com.swensonhe.currcon.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.swensonhe.currcon.ui.LatestRatesActivity
+import com.swensonhe.currcon.R
+import com.swensonhe.currcon.ui.latest_rates.LatestRatesActivity
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

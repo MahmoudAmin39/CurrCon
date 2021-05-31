@@ -1,16 +1,18 @@
 package com.swensonhe.currcon.data.retrofit
 
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("https://http://data.fixer.io/api/")
+            .baseUrl("http://data.fixer.io/api/")
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    val latestRatesService by lazy {
+    val latestRatesService: LatestRatesService by lazy {
         retrofit.create(LatestRatesService::class.java)
     }
 }
