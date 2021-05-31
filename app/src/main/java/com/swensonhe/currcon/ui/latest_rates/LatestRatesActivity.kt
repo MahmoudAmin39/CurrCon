@@ -32,6 +32,9 @@ class LatestRatesActivity : AppCompatActivity() {
             textViewErrorMessage.visibility = View.VISIBLE
             textViewErrorMessage.text = it
         }
-        viewModel.getRatesExchangeData().observe(this) { latestRatesAdapter.addAll(it)}
+        viewModel.getRatesExchangeData().observe(this) {
+            textViewErrorMessage.visibility = View.GONE
+            latestRatesAdapter.addAll(it)
+        }
     }
 }
