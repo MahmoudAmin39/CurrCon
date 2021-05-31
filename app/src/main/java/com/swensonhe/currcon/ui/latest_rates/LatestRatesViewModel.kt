@@ -1,29 +1,44 @@
 package com.swensonhe.currcon.ui.latest_rates
 
-import android.util.Log
+import android.view.View
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.swensonhe.currcon.data.Constants
-import com.swensonhe.currcon.data.model.ApiResponse
-import com.swensonhe.currcon.data.retrofit.RetrofitClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.swensonhe.currcon.data.MainDataManager
+import com.swensonhe.currcon.data.model.CurrencyRate
 
 class LatestRatesViewModel : ViewModel() {
 
-    private val latestRatesService = RetrofitClient.latestRatesService
+    private val baseCurrency = MutableLiveData(Constants.CURRENCY_BASE)
+    private val progressBarVisibility = MutableLiveData<Int>()
+    private val ratesExchangeData by lazy { MutableLiveData<List<CurrencyRate>>() }
+    private val errorMessageData by lazy { MutableLiveData<String>() }
 
-    fun getLatestRatesFor(currency: String) {
-        latestRatesService.getLatestRatesFor(currency, Constants.FIXER_IO_API_KEY)
-            .enqueue(object : Callback<ApiResponse> {
-
-                override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
-                    Log.d("LatestRatesViewModel", "onResponse: ")
-                }
-
-                override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                    Log.d("LatestRatesViewModel", "onFailure: ")
-                }
-            })
+    fun getLatestRatesForBaseCurrency() {
+        if (baseCurrency.value == null) {
+            errorMessageData.value =
+                "Error occurred. Base currency was not set.\nPlease contact the developer."
+            return
+        }
+        progressBarVisibility.value = View.VISIBLE
+        MainDataManager.getLatestRatesFor(baseCurrency.value!!) { rates, errorMessage ->
+            progressBarVisibility.value = View.GONE
+            if (rates != null && errorMessage == null) {
+                // Everything went right
+                rates.let { ratesExchangeData.value = it }
+            } else if (errorMessage != null && rates == null) {
+                // Something went wrong
+                errorMessage.let { errorMessageData.value = it }
+            }
+        }
     }
+
+    fun getProgressBarVisibility(): LiveData<Int> = progressBarVisibility
+
+    fun getRatesExchangeData(): LiveData<List<CurrencyRate>> = ratesExchangeData
+
+    fun getErrorMessageData(): LiveData<String> = errorMessageData
+
+    fun getBaseCurrency(): LiveData<String> = baseCurrency
 }

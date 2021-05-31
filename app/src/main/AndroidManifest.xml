@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CurrCon"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.latest_rates.LatestRatesActivity" />
+        <activity
+            android:name=".ui.latest_rates.LatestRatesActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".ui.SplashActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
