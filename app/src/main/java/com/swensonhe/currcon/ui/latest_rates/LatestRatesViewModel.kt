@@ -16,7 +16,7 @@ class LatestRatesViewModel : ViewModel() {
     private val errorMessageData by lazy { MutableLiveData<String>() }
 
     fun getLatestRatesForBaseCurrency() {
-        if (baseCurrency.value == null) {
+        if (baseCurrency.value == null || baseCurrency.value == "") {
             errorMessageData.value =
                 "Error occurred. Base currency was not set.\nPlease contact the developer."
             return
