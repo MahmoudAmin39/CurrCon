@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CurrCon"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.calculator.CurrencyCalculatorActivity"></activity>
         <activity
             android:name=".ui.latest_rates.LatestRatesActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
