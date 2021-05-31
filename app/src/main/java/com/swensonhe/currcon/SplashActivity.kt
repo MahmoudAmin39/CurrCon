@@ -15,6 +15,6 @@ class SplashActivity : AppCompatActivity() {
             val intent = Intent(this, LatestRatesActivity::class.java)
             startActivity(intent)
             finishAffinity()
-        }, 300)
+        }, 400)
     }
 }
